@@ -227,41 +227,52 @@ elif rol == "Area de Bienestar":
 # ==========================================
 elif rol == "Administrador":
     st.header("Panel de Control del Administrador")
-    st.subheader("Base de Datos")
     
-    st.markdown("#### Perfiles Registrados")
-    col_adm1, col_adm2 = st.columns(2)
-    with col_adm1:
-        st.info(f"""
-        **Estudiante Actual:**
-        - **Nombre:** {st.session_state.perfil_alumno['nombre']}
-        - **Carrera:** {st.session_state.perfil_alumno['carrera']}
-        - **Ciclo:** {st.session_state.perfil_alumno['ciclo']}
-        - **Cursos:** {st.session_state.perfil_alumno['cursos']}
-        - **Turno:** {st.session_state.perfil_alumno['turno']}
-        """)
-    with col_adm2:
-        st.success(f"""
-        **Docente Actual:**
-        - **Nombre:** {st.session_state.perfil_docente['nombre']}
-        - **Cursos:** {st.session_state.perfil_docente['cursos']}
-        """)
+    # Sistema de seguridad con tu contraseña personalizada
+    contrasenia_correcta = "admin_123"
+    
+    ingreso = st.text_input("Ingrese la contraseña de Administrador:", type="password")
+    
+    if ingreso == contrasenia_correcta:
+        st.success("Acceso concedido")
+        st.subheader("Base de Datos")
         
-    st.markdown("#### Historial Global de Asistencias por QR")
-    if st.session_state.asistencias_registradas:
-        st.dataframe(pd.DataFrame(st.session_state.asistencias_registradas), use_container_width=True)
-    else:
-        st.warning("No hay registros de asistencias escaneadas por el docente aun.")
-        
-    st.markdown("#### Registro Global de Justificaciones")
-    if st.session_state.justificaciones:
-        st.dataframe(pd.DataFrame(st.session_state.justificaciones), use_container_width=True)
-        
-    st.markdown("#### Acciones de Control Técnico")
-    st.checkbox("Habilitar sincronizacion automatica con el servidor del instituto")
-    st.checkbox("Permitir tolerancia de 15 minutos en el escaneo de codigos")
-    if st.button("Reiniciar Base de Datos del Ciclo"):
-        st.session_state.asistencias_registradas = []
-        st.session_state.codigo_actual = "QR-PENDIENTE"
-        st.success("Datos del ciclo restablecidos con exito")
-        st.rerun()
+        st.markdown("#### Perfiles Registrados")
+        col_adm1, col_adm2 = st.columns(2)
+        with col_adm1:
+            st.info(f"""
+            **Estudiante Actual:**
+            - **Nombre:** {st.session_state.perfil_alumno['nombre']}
+            - **Carrera:** {st.session_state.perfil_alumno['carrera']}
+            - **Ciclo:** {st.session_state.perfil_alumno['ciclo']}
+            - **Cursos:** {st.session_state.perfil_alumno['cursos']}
+            - **Turno:** {st.session_state.perfil_alumno['turno']}
+            """)
+        with col_adm2:
+            st.success(f"""
+            **Docente Actual:**
+            - **Nombre:** {st.session_state.perfil_docente['nombre']}
+            - **Cursos:** {st.session_state.perfil_docente['cursos']}
+            """)
+            
+        st.markdown("#### Historial Global de Asistencias por QR")
+        if st.session_state.asistencias_registradas:
+            st.dataframe(pd.DataFrame(st.session_state.asistencias_registradas), use_container_width=True)
+        else:
+            st.warning("No hay registros de asistencias escaneadas por el docente aun.")
+            
+        st.markdown("#### Registro Global de Justificaciones")
+        if st.session_state.justificaciones:
+            st.dataframe(pd.DataFrame(st.session_state.justificaciones), use_container_width=True)
+            
+        st.markdown("#### Acciones de Control Técnico")
+        st.checkbox("Habilitar sincronizacion automatica con el servidor del instituto")
+        st.checkbox("Permitir tolerancia de 15 minutos en el escaneo de codigos")
+        if st.button("Reiniciar Base de Datos del Ciclo"):
+            st.session_state.asistencias_registradas = []
+            st.session_state.codigo_actual = "QR-PENDIENTE"
+            st.success("Datos del ciclo restablecidos con exito")
+            st.rerun()
+            
+    elif ingreso != "":
+        st.error("Contraseña incorrecta. Acceso denegado.")
